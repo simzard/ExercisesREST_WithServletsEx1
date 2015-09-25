@@ -6,11 +6,60 @@ and open the template in the editor.
 -->
 <html>
     <head>
-        <title>TODO supply a title</title>
+        <title>Random Quote of the Day</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <script type="text/javascript" src="resources/jquery-2.1.4.js"></script>
+
+        <script type="text/javascript">
+
+            function newQuote() {
+                $.ajax({
+                    url: "api/quote",
+                    data: JSON.stringify({quote : $("#theQuoteEdit").val()}),                        
+                    type: "POST",
+                    datatype: "json"
+
+                }).done(function (dataFromServer) {
+                    $("#theQuoteEdit").val(dataFromServer.quote);
+                }).fail(function () {
+                    alert("UUUUUUpsssss");
+                });
+            }
+
+            function loadRandomQuote() {
+                $.ajax({
+                    url: "api/quote/random" + $("#qid").val(),
+                    type: "GET",
+                    datatype: "json"
+
+                }).done(function (dataFromServer) {
+                    $("#theQuote").text(dataFromServer.quote);
+                }).fail(function () {
+                    alert("UUUUUUpsssss");
+                });
+
+            }
+
+            $(document).ready(function () {
+                loadRandomQuote();
+                
+                $("#newbtn").click(newQuote);
+            });
+
+        </script>
     </head>
     <body>
-        <div>TODO write content</div>
+        <h1>Quote of today:</h1>
+        <h2 id="theQuote"></h2>
+        
+        <h2>Quote Editor</h2>
+        <div>
+            <input id="qid" type="text" placeholder="Enter id"><button id="getbtn">Get Quote</button>
+            <button id="newbtn">New Quote</button>
+        </div>
+        <input id="theQuoteEdit" style="width: 60em; margin-top:1em">
+
     </body>
 </html>
